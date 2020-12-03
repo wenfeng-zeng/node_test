@@ -18,7 +18,8 @@ module.exports = {
   },
   prizeHistory (val, callback) {
     // let sql = `SELECT * FROM prizeList where id=${id}`;
-    let sql = `INSERT INTO prizeHistory (name, number, isdeleted, id) VALUES ('${val.name}', ${val.number}, ${val.isdelete}, ${val.id})`
+    let time = new Date().getTime()
+    let sql = `INSERT INTO prizeHistory (name, number, isdeleted, id,date) VALUES ('${val.name}', ${val.number}, ${val.isdelete}, ${val.id},${time})`
     connection.sqlConnection.query(sql, (err, result) => {
       callback(err, result)
     })
