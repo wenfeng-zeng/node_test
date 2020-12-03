@@ -6,8 +6,14 @@ router.get('/getIndex', (req, res) => {
   // controller.getIndex(req,res)
   res.send('收到get请求');
 });
-router.get('/prizeList', (req, res) => {
+router.post('/prizeList', (req, res) => {
   controller.getPrizeList(req, res)
+});
+router.post('/getPrize', (req, res) => {
+  controller.getPrize(req, res)
+});
+router.get('/getPrizeHistory', (req, res) => {
+  controller.getPrizeHistory(req, res)
 });
 // app.get('/getIndex', (req, res) => {
 //   res.send('收到get请求');
