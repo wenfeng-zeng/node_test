@@ -4,7 +4,7 @@ module.exports = {
     listModule.getPrizeList((err, result) => {
       if (err) console.error(err);
       let resObj = null;
-      console.log(result)
+      console.log(result, new Date())
       if (result) {
         resObj = {
           code: 200,
@@ -58,7 +58,8 @@ module.exports = {
     })
   },
   getPrizeHistory (req, res) {
-    listModule.getPrizeHistory((err, result) => {
+    let query = req.query
+    listModule.getPrizeHistory(query, (err, result) => {
       if (err) console.error(err);
       let resObj = null;
       if (result) {
@@ -67,14 +68,20 @@ module.exports = {
           msg: 'success',
           data: result
         }
+        listModule.getCount((err1, result1) => {
+          if (err1) console.error(err1);
+          resObj.count = result1
+          res.send(resObj)
+        })
       } else {
         resObj = {
           code: 401,
           msg: 'fail',
-          data: []
+          data: [],
+          count: 0
         }
+        res.send(resObj)
       }
-      res.send(resObj)
     })
   },
 }
