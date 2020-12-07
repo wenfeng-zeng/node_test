@@ -22,7 +22,7 @@ module.exports = {
     })
   },
   getPrize (req, res) {
-    listModule.getPrize((err, result) => {
+    listModule.getPrizeList((err, result) => {
       if (err) console.error(err);
       let resObj = null;
       if (result) {
