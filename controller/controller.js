@@ -1,5 +1,36 @@
 const listModule = require('../module/module')
+const jwt = require('jsonwebtoken');
+const fs = require("fs");
 module.exports = {
+  login (query, res) {
+    listModule.login(query, (err, result) => {
+      if (err) console.error(err);
+      let resObj = null;
+      if (result && result.length > 0) {
+        resObj = {
+          code: 200,
+          msg: 'success'
+        }
+        fs.readFile('./utils/jwt.pem', function (error, cert) {
+          const token = jwt.sign({
+            user: result.userName,
+            id: result._id
+          }, cert, {
+            algorithm: 'RS256',    // 加密算法（默认值：HS256）
+            expiresIn: '1h',    // 过期时间
+          });
+          resObj.token = token
+          res.send(resObj)
+        });
+      } else {
+        resObj = {
+          code: 401,
+          msg: 'fail',
+          data: []
+        }
+      }
+    })
+  },
   getPrizeList (req, res) {
     listModule.getPrizeList((err, result) => {
       if (err) console.error(err);

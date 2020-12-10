@@ -1,23 +1,14 @@
 const connection = require('./sql')
-
 module.exports = {
+  login (query, callback) {
+    console.log(query)
+    const { userName, password } = query
+    connection.do(`SELECT * FROM user where userName='${userName}' and password='${password}'`).then(res => {
+      callback(res.err2, res.res)
+    })
+  },
   getPrizeList (callback) {
-    // connection.sqlConnection.getConnection((err, conn) => {
-    //   if (err) {
-    //     console.log('和mysql数据库建立连接失败', '---getPrizeList');
-    //   } else {
-    //     conn.query('SELECT * FROM prizeList', (err2, res) => {
-    //       if (err2) {
-    //         console.log('查询数据库失败');
-    //       } else {
-    //         callback(err, res)
-    //         conn.release()
-    //       }
-    //     })
-    //   }
-    // });
     connection.do('SELECT * FROM prizeList').then(res => {
-      // console.log(res)
       callback(res.err2, res.res)
     })
   },
