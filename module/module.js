@@ -1,9 +1,8 @@
 const connection = require('./sql')
 module.exports = {
   login (query, callback) {
-    console.log(query)
-    const { userName, password } = query
-    connection.do(`SELECT * FROM user where userName='${userName}' and password='${password}'`).then(res => {
+    const { userName } = query
+    connection.do(`SELECT * FROM user where userName='${userName}'`).then(res => {
       callback(res.err2, res.res)
     })
   },

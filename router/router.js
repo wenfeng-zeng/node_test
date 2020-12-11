@@ -6,7 +6,7 @@ const controller = require('../controller/controller')
 // const expressJwt = require('express-jwt')
 const jwt = require('jsonwebtoken');
 router.use(function (req, res, next) {
-  if (req.originalUrl === '/login') {
+  if (req.originalUrl === '/login' || req.originalUrl === '/getParticlesJson') {
     next()
   } else {
     var token = req.query.token || req.headers['authorization'];
@@ -30,12 +30,6 @@ router.use(function (req, res, next) {
     }
   }
 });
-// app.use(expressJwt({
-//   secret: 'secret12345',  // 签名的密钥 或 PublicKey
-//   algorithms: ['HS245']
-// }).unless({
-//   path: [{ url: '/login', methods: ['POST'] }]  // 指定路径不经过 Token 解析
-// }))
 router.post('/login', function (req, res) {
   controller.login(req.body, res)
 })
@@ -49,7 +43,6 @@ router.post('/getPrize', (req, res) => {
   controller.getPrize(req, res)
 });
 router.get('/getPrizeHistory', (req, res) => {
-  console.log(1234)
   controller.getPrizeHistory(req, res)
 });
 router.get('/getParticlesJson', (req, res) => {

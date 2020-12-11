@@ -7,27 +7,38 @@ module.exports = {
       if (err) console.error(err);
       let resObj = null;
       if (result && result.length > 0) {
-        resObj = {
-          code: 200,
-          msg: 'success'
-        }
-        fs.readFile('./utils/jwt.pem', function (error, cert) {
-          const token = jwt.sign({
-            user: result.userName,
-            id: result._id
-          }, cert, {
-            algorithm: 'RS256',    // 加密算法（默认值：HS256）
-            expiresIn: '1h',    // 过期时间
+        if (result[0].password === query.password) {
+          resObj = {
+            code: 200,
+            msg: 'success'
+          }
+          fs.readFile('./utils/jwt.pem', function (error, cert) {
+            const token = jwt.sign({
+              user: result.userName,
+              id: result._id
+            }, cert, {
+              algorithm: 'RS256',    // 加密算法（默认值：HS256）
+              expiresIn: '1h',    // 过期时间
+            });
+            resObj.token = token
+            res.send(resObj)
           });
-          resObj.token = token
+
+        } else {
+          resObj = {
+            code: 500,
+            msg: '密码错误',
+            data: []
+          }
           res.send(resObj)
-        });
+        }
       } else {
         resObj = {
-          code: 401,
-          msg: 'fail',
+          code: 500,
+          msg: '账号不存在',
           data: []
         }
+        res.send(resObj)
       }
     })
   },
