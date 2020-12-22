@@ -28,7 +28,7 @@ module.exports = {
     //     })
     //   }
     // });
-    connection.do(`INSERT INTO prizeHistory (name, number, isdeleted, prizeId,date) VALUES ('${val.name}', ${val.number}, ${val.isdelete}, ${val.id},${time})`).then(res => {
+    connection.do(`INSERT INTO prizeHistory (name, number, isdeleted, prizeId,date,userId) VALUES ('${val.name}', ${val.number}, ${val.isDeleted}, ${val.id},${time},${val.userId})`).then(res => {
       callback(res.err2, res.res)
     })
   },
@@ -39,7 +39,7 @@ module.exports = {
     // connection.sqlConnection.query(sql, (err, result) => {
     //   callback(err, result)
     // })
-    let { pageNum, pageSize } = query
+    let { pageNum, pageSize, userinfo } = query
     let num = (Number(pageNum) - 1) * Number(pageSize)
     // connection.sqlConnection.getConnection((err, conn) => {
     //   if (err) {
@@ -56,7 +56,7 @@ module.exports = {
     //     })
     //   }
     // });
-    connection.do(`SELECT * FROM prizeHistory  ORDER BY date desc limit ${num},${Number(pageSize)}`).then(res => {
+    connection.do(`SELECT * FROM prizeHistory where id = ${userinfo.id} ORDER BY date desc limit ${num},${Number(pageSize)}`).then(res => {
       callback(res.err2, res.res)
     })
   },

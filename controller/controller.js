@@ -14,8 +14,8 @@ module.exports = {
           }
           fs.readFile('./utils/jwt.pem', function (error, cert) {
             const token = jwt.sign({
-              user: result.userName,
-              id: result._id
+              user: result[0].userName,
+              id: result[0].id
             }, cert, {
               algorithm: 'RS256',    // 加密算法（默认值：HS256）
               expiresIn: '1h',    // 过期时间
@@ -44,9 +44,10 @@ module.exports = {
   },
   getPrizeList (req, res) {
     listModule.getPrizeList((err, result) => {
+      // console.log(req.userinfo, '--- req.userinfo ')
       if (err) console.error(err);
       let resObj = null;
-      console.log(result, new Date())
+      // console.log(result, new Date())
       if (result) {
         resObj = {
           code: 200,
@@ -80,6 +81,7 @@ module.exports = {
               randomNum -= e.number
             } else {
               resObj.data = e
+              e.userId = req.userinfo.id
               listModule.prizeHistory(e, (err1, result1) => {
                 if (err1) console.error(err1);
               })
@@ -101,6 +103,7 @@ module.exports = {
   },
   getPrizeHistory (req, res) {
     let query = req.query
+    query.userinfo = req.userinfo
     listModule.getPrizeHistory(query, (err, result) => {
       if (err) console.error(err);
       let resObj = null;
@@ -112,7 +115,7 @@ module.exports = {
         }
         listModule.getCount((err1, result1) => {
           if (err1) console.error(err1);
-          resObj.count = result1
+          resObj.count = result1[0]
           res.send(resObj)
         })
       } else {
