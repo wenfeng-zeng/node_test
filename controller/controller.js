@@ -129,4 +129,25 @@ module.exports = {
       }
     })
   },
+  getUserInfo (req, res) {
+    let userinfo = req.userinfo
+    listModule.getUserInfo(userinfo, (err, result) => {
+      if (err) console.error(err);
+      let resObj = null;
+      if (result) {
+        resObj = {
+          code: 200,
+          msg: 'success',
+          data: result[0]
+        }
+      } else {
+        resObj = {
+          code: 401,
+          msg: '查无数据',
+          data: [],
+        }
+      }
+      res.send(resObj)
+    })
+  }
 }

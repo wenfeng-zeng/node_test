@@ -80,4 +80,9 @@ module.exports = {
       callback(res.err2, res.res)
     })
   },
+  getUserInfo (userinfo, callback) {
+    connection.do('SELECT * FROM userInfo where userId = ' + userinfo.id).then(res => {
+      callback(res.err2, res.res)
+    })
+  },
 }

@@ -15,7 +15,7 @@ router.use(function (req, res, next) {
         jwt.verify(token, cert, (err, decoded) => {
           // token失效
           if (err) {
-            res.json({ success: false, message: '无效的token.' });
+            res.json({ success: false, message: '无效的token', code: 403 });
           } else {
             req.userinfo = decoded;
             next();
@@ -44,6 +44,10 @@ router.post('/getPrize', (req, res) => {
 });
 router.get('/getPrizeHistory', (req, res) => {
   controller.getPrizeHistory(req, res)
+});
+// 获取用户信息
+router.post('/getUserInfo', (req, res) => {
+  controller.getUserInfo(req, res)
 });
 router.get('/getParticlesJson', (req, res) => {
   fs.readFile("./files/particles.json", function (error, data) {
