@@ -149,5 +149,49 @@ module.exports = {
       }
       res.send(resObj)
     })
-  }
+  },
+  getEchartsInfo (req, res) {
+    listModule.getEchartsInfo((err, result) => {
+      if (err) console.error(err);
+      let resObj = null;
+      console.log(result)
+      if (result) {
+        resObj = {
+          code: 200,
+          msg: 'success'
+        }
+        // let data = {
+        //   echartsData1: [],
+        //   echartsData2: [],
+        //   echartsData3: [],
+        // }
+        let data = {
+          turnover: { data: [], title: '' },
+          faceValue: { data: [], title: '' },
+          order: { data: [], title: '' }
+        }
+        let temp = {}
+        result.forEach(e => {
+          if (e.type === 1) {
+            data.turnover.data.push(e)
+            data.turnover.title = e.title
+          } else if (e.type === 2) {
+            data.order.data.push(e)
+            data.order.title = e.title
+          } else if (e.type === 3) {
+            data.faceValue.title = e.title
+            data.faceValue.data.push(e)
+          }
+        })
+        resObj.data = data
+      } else {
+        resObj = {
+          code: 401,
+          msg: '查无数据',
+          data: [],
+        }
+      }
+      res.send(resObj)
+    })
+  },
 }

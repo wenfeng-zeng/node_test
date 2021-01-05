@@ -56,7 +56,7 @@ module.exports = {
     //     })
     //   }
     // });
-    connection.do(`SELECT * FROM prizeHistory where id = ${userinfo.id} ORDER BY date desc limit ${num},${Number(pageSize)}`).then(res => {
+    connection.do(`SELECT * FROM prizeHistory where userId = ${userinfo.id} ORDER BY date desc limit ${num},${Number(pageSize)}`).then(res => {
       callback(res.err2, res.res)
     })
   },
@@ -82,6 +82,11 @@ module.exports = {
   },
   getUserInfo (userinfo, callback) {
     connection.do('SELECT * FROM userInfo where userId = ' + userinfo.id).then(res => {
+      callback(res.err2, res.res)
+    })
+  },
+  getEchartsInfo (callback) {
+    connection.do(`select * from echartsInfo`).then(res => {
       callback(res.err2, res.res)
     })
   },

@@ -6,7 +6,7 @@ const controller = require('../controller/controller')
 // const expressJwt = require('express-jwt')
 const jwt = require('jsonwebtoken');
 router.use(function (req, res, next) {
-  if (req.originalUrl === '/login' || req.originalUrl === '/getParticlesJson') {
+  if (req.originalUrl === '/login' || req.originalUrl === '/getParticlesJson' || req.originalUrl === '/getEchartsInfo') {
     next()
   } else {
     var token = req.query.token || req.headers['authorization'];
@@ -58,5 +58,9 @@ router.get('/getParticlesJson', (req, res) => {
       res.send(data)
     }
   })
+});
+// 实验echarts用
+router.post('/getEchartsInfo', (req, res) => {
+  controller.getEchartsInfo(req, res)
 });
 module.exports = router;
