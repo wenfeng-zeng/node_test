@@ -2,7 +2,7 @@ const listModule = require('../module/module')
 const jwt = require('jsonwebtoken');
 const fs = require("fs");
 module.exports = {
-  login (query, res) {
+  login(query, res) {
     listModule.login(query, (err, result) => {
       if (err) console.error(err);
       let resObj = null;
@@ -12,7 +12,7 @@ module.exports = {
             code: 200,
             msg: 'success'
           }
-          fs.readFile('./utils/jwt.pem', function (error, cert) {
+          fs.readFile('./utils/jwt.pem', function(error, cert) {
             const token = jwt.sign({
               user: result[0].userName,
               id: result[0].id
@@ -42,7 +42,7 @@ module.exports = {
       }
     })
   },
-  getPrizeList (req, res) {
+  getPrizeList(req, res) {
     listModule.getPrizeList((err, result) => {
       // console.log(req.userinfo, '--- req.userinfo ')
       if (err) console.error(err);
@@ -64,7 +64,7 @@ module.exports = {
       res.send(resObj)
     })
   },
-  getPrize (req, res) {
+  getPrize(req, res) {
     listModule.getPrizeList((err, result) => {
       if (err) console.error(err);
       let resObj = null;
@@ -101,7 +101,7 @@ module.exports = {
       res.send(resObj)
     })
   },
-  getPrizeHistory (req, res) {
+  getPrizeHistory(req, res) {
     let query = req.query
     query.userinfo = req.userinfo
     listModule.getPrizeHistory(query, (err, result) => {
@@ -129,7 +129,7 @@ module.exports = {
       }
     })
   },
-  getUserInfo (req, res) {
+  getUserInfo(req, res) {
     let userinfo = req.userinfo
     listModule.getUserInfo(userinfo, (err, result) => {
       if (err) console.error(err);
@@ -150,7 +150,7 @@ module.exports = {
       res.send(resObj)
     })
   },
-  getEchartsInfo (req, res) {
+  getEchartsInfo(req, res) {
     listModule.getEchartsInfo((err, result) => {
       if (err) console.error(err);
       let resObj = null;
@@ -184,6 +184,47 @@ module.exports = {
           }
         })
         resObj.data = data
+      } else {
+        resObj = {
+          code: 401,
+          msg: '查无数据',
+          data: [],
+        }
+      }
+      res.send(resObj)
+    })
+  },
+  getFullScreenInfo(req, res) {
+    listModule.getFullScreenInfo((err, result) => {
+      if (err) console.error(err);
+      let resObj = null;
+      console.log(result)
+      if (result) {
+        resObj = {
+          code: 200,
+          msg: 'success'
+        }
+        let data = []
+        let typeList = []
+        result.forEach((e, i) => {
+          typeList.push(e.type)
+          if (i === 0) {
+            data.push({ years: e.years, type: e.type, data: [{ type: e.type, num: e.num }] })
+          } else {
+            let index = data.findIndex((item) => {
+              return item.years === e.years
+            })
+            if (index === -1) {
+              data.push({ years: e.years, data: [{ type: e.type, num: e.num }] })
+            } else {
+              data[index].data.push({ type: e.type, num: e.num })
+            }
+          }
+        })
+        resObj.data = {
+          data: data,
+          typeList: Array.from(new Set(typeList))
+        }
       } else {
         resObj = {
           code: 401,

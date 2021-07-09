@@ -5,13 +5,13 @@ var router = express.Router();
 const controller = require('../controller/controller')
 // const expressJwt = require('express-jwt')
 const jwt = require('jsonwebtoken');
-router.use(function (req, res, next) {
-  if (req.originalUrl === '/login' || req.originalUrl === '/getParticlesJson' || req.originalUrl === '/getEchartsInfo') {
+router.use(function(req, res, next) {
+  if (req.originalUrl === '/login' || req.originalUrl === '/getParticlesJson') {
     next()
   } else {
     var token = req.query.token || req.headers['authorization'];
     if (token) {
-      fs.readFile('./utils/jwt_pub.pem', function (error, cert) {
+      fs.readFile('./utils/jwt_pub.pem', function(error, cert) {
         jwt.verify(token, cert, (err, decoded) => {
           // token失效
           if (err) {
@@ -25,12 +25,13 @@ router.use(function (req, res, next) {
     } else {
       return res.status(403).send({
         success: false,
-        message: '没有找到token.'
+        message: '没有找到token.',
+        code: 403
       });
     }
   }
 });
-router.post('/login', function (req, res) {
+router.post('/login', function(req, res) {
   controller.login(req.body, res)
 })
 router.get('/getIndex', (req, res) => {
@@ -50,7 +51,7 @@ router.post('/getUserInfo', (req, res) => {
   controller.getUserInfo(req, res)
 });
 router.get('/getParticlesJson', (req, res) => {
-  fs.readFile("./files/particles.json", function (error, data) {
+  fs.readFile("./files/particles.json", function(error, data) {
     if (error) {
       console.log(error)
       res.send("文件读取失败");
@@ -62,5 +63,8 @@ router.get('/getParticlesJson', (req, res) => {
 // 实验echarts用
 router.post('/getEchartsInfo', (req, res) => {
   controller.getEchartsInfo(req, res)
+});
+router.post('/getFullScreenInfo', (req, res) => {
+  controller.getFullScreenInfo(req, res)
 });
 module.exports = router;

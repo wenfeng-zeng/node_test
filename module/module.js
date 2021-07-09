@@ -1,17 +1,17 @@
 const connection = require('./sql')
 module.exports = {
-  login (query, callback) {
+  login(query, callback) {
     const { userName } = query
     connection.do(`SELECT * FROM user where userName='${userName}'`).then(res => {
       callback(res.err2, res.res)
     })
   },
-  getPrizeList (callback) {
+  getPrizeList(callback) {
     connection.do('SELECT * FROM prizeList').then(res => {
       callback(res.err2, res.res)
     })
   },
-  prizeHistory (val, callback) {
+  prizeHistory(val, callback) {
     let time = new Date().getTime()
     // connection.sqlConnection.getConnection((err, conn) => {
     //   if (err) {
@@ -32,7 +32,7 @@ module.exports = {
       callback(res.err2, res.res)
     })
   },
-  getPrizeHistory (query, callback) {
+  getPrizeHistory(query, callback) {
     // let { pageNum, pageSize } = query
     // let num = (Number(pageNum) - 1) * Number(pageSize)
     // let sql = `SELECT * FROM prizeHistory  ORDER BY date desc limit ${num},${Number(pageSize)}`;
@@ -60,7 +60,7 @@ module.exports = {
       callback(res.err2, res.res)
     })
   },
-  getCount (callback) {
+  getCount(callback) {
     // connection.sqlConnection.getConnection((err, conn) => {
     //   if (err) {
     //     console.log('和mysql数据库建立连接失败', '---getCount');
@@ -80,13 +80,18 @@ module.exports = {
       callback(res.err2, res.res)
     })
   },
-  getUserInfo (userinfo, callback) {
+  getUserInfo(userinfo, callback) {
     connection.do('SELECT * FROM userInfo where userId = ' + userinfo.id).then(res => {
       callback(res.err2, res.res)
     })
   },
-  getEchartsInfo (callback) {
+  getEchartsInfo(callback) {
     connection.do(`select * from echartsInfo`).then(res => {
+      callback(res.err2, res.res)
+    })
+  },
+  getFullScreenInfo(callback) {
+    connection.do(`select * from fullScreenChartsInfo  where isDeleted = 0`).then(res => {
       callback(res.err2, res.res)
     })
   },
